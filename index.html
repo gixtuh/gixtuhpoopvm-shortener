@@ -1,5 +1,4 @@
 <head>
-    <title>gixtuh's vnc if anyone needs</title>
     <style>
         body {
             background-color: gray;
@@ -78,15 +77,19 @@
         const chatDiv = document.getElementById('chat');
         const input = document.getElementById('message');
         
-        const ws = new WebSocket('wss://wschat-server.onrender.com/');
 
-        let user = "Guest"
+        let user = localStorage.getItem("username") ?? `Guest${Math.round(Math.random() * 89999999 + 10000000)}`
+        console.log(user)
+        const ws = new WebSocket('wss://wschat-server.onrender.com/', user);
 
         function changeuser() {
             user = prompt("which username")
             if (user == "" || user == undefined || user.length > 15) {
-                user = "Guest"
+                user = `Guest${Math.round(Math.random() * 89999999 + 10000000)}`
                 alert("Your username has been reset.\nYour username cannot have more than 15 letters and cant be nothing.")
+            } else {
+                localStorage.setItem("username", user.replace(" ", "_"))
+                window.location.href = window.location.href
             }
         }
         
@@ -99,11 +102,11 @@
                         appendMessage(data.user ? `${data.user}: ${data.message}` : data.message);
                     }
                 }
-            } catch (err) {
+            } catch (err) { 
                 console.error('Invalid JSON', err);
             }
         });
-        ws.addEventListener('close', () => {appendMessage('the chat servers kicked you out you can no longer chat'); appendMessage('refresh the page to reconnect')});
+        ws.addEventListener('close', () => {appendMessage('the chat servers kicked you out you can no longer chat'); appendMessage('refresh the page to reconnect'); appendMessage("it's either because you tried to spam or your username violates something")});
         ws.addEventListener('error', () => appendMessage('error'));
         
         input.addEventListener('keypress', (e) => {
