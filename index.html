@@ -1,20 +1,124 @@
-<html>
-  <head>
+<head>
     <style>
-      body {
-        text-align: center;
-        font-family: Arial, Helvetica, sans-serif;
-      }
+        body {
+            background-color: gray;
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        iframe {
+            justify-self: center;
+            margin-top: 40px;
+            display: flex;
+            border: none;
+            border-radius: 10px;
+        }
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #chat {
+            width: 90%;
+            height: 400px;
+            border: 2px solid #333;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #111;
+            color: #eee;
+            border-radius: 8px;
+        }
+        
+        #message {
+            width: 70%;
+            padding: 8px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+        }
+        button {
+            border: none;
+            border-radius: 5px;
+            background-color: rgb(102, 102, 102);
+            color: rgb(204, 204, 204);
+            padding: 15px;
+            transition-duration: 0.3s;
+        }
+        button:hover {
+            background-color: rgb(78, 78, 78);
+            transition-duration: 0.2s;
+        }
+        button:active {
+            background-color: rgb(44, 44, 44)
+        }
+        p {
+            margin-bottom: 5px;
+        }
     </style>
-    <script>
-        window.location.href = "https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhpoopvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0"
-    </script>
-  </head>
-  <body>
-    <h1>redirecting</h1>
+</head>
+<body>
+
+    <h1>gixtuh's poop vm</h1>
+    <p>a really great vnc with a virtual machine</p> <br />
+    <button onclick="window.location.href = 'https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhpoopvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0'">embed</button>
+    <button onclick="ws.send(JSON.stringify({'room': 'gixtuhpoopvm', 'message':'hidden', 'action': 'reboot', 'code': prompt('enter 4 digit code to reboot: ')}))">reboot</button>
     <hr />
-    copy and paste this link if it doesnt redirect: 
+    <iframe width="700" height="450" src="https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhpoopvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0" allowfullscreen></iframe>
+
     <br />
-    https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhpoopvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0
-  </body>
-</html>
+    
+    <div id="chat-container">
+        <div id="chat"></div>
+        <input id="message" type="text" placeholder="enter a message" />
+    </div>
+    <button onclick="changeuser()">change username</button>
+    
+    <script>
+        const chatDiv = document.getElementById('chat');
+        const input = document.getElementById('message');
+        
+        const ws = new WebSocket('wss://wschat-server.onrender.com/');
+
+        let user = "Guest"
+
+        function changeuser() {
+            user = prompt("which username")
+            if (user == "" || user == undefined || user.length > 15) {
+                user = "Guest"
+                alert("Your username has been reset.\nYour username cannot have more than 15 letters and cant be nothing.")
+            }
+        }
+        
+        ws.addEventListener('open', () => appendMessage('connected'));
+        ws.addEventListener('message', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.room === 'gixtuhpoopvm') {
+                    if (data.message !== "hidden" && data.user !== undefined) {
+                        appendMessage(data.user ? `${data.user}: ${data.message}` : data.message);
+                    }
+                }
+            } catch (err) {
+                console.error('Invalid JSON', err);
+            }
+        });
+        ws.addEventListener('close', () => {appendMessage('the chat servers kicked you out you can no longer chat'); appendMessage('refresh the page to reconnect')});
+        ws.addEventListener('error', () => appendMessage('error'));
+        
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                const msg = { room: 'gixtuhpoopvm', message: input.value.trim(), user: user };
+                ws.send(JSON.stringify(msg));
+                input.value = '';
+            }
+        });
+        
+        function appendMessage(text) {
+            const msg = document.createElement('div');
+            msg.textContent = text;
+            chatDiv.appendChild(msg);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+    </script>
+    
+</body>
