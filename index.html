@@ -164,7 +164,7 @@
             }
         }
         
-        ws.addEventListener('open', () => appendMessage('connected'));
+        ws.addEventListener('open', () => appendMessage('connected to chat servers'));
         ws.addEventListener('message', (event) => {
             try {
                 const data = JSON.parse(event.data);
