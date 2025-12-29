@@ -96,7 +96,11 @@
             }
         }
         
-        ws.addEventListener('open', () => appendMessage('connected'));
+        ws.addEventListener('open', () => {appendMessage('connected');
+            setInterval(() => {
+                ws.send("1234567890")
+            }, 5000);
+        });
         ws.addEventListener('message', (event) => {
             try {
                 const data = JSON.parse(event.data);
