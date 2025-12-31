@@ -88,6 +88,9 @@
     <button id="rebootBtn">reboot</button>
     
     <script>
+        if (window.location.href !== "https://gixtuhgreatvm.vercel.app/") {
+            window.location.href = "https://gixtuhgreatvm.vercel.app/"
+        }
         let dataaction = undefined
         document.getElementById('rebootBtn').addEventListener('click', async () => {
             const secretJson = await new Promise(resolve => {
@@ -99,7 +102,7 @@
                 const timeout = setTimeout(() => {
                     ws.removeEventListener('message', handler);
                     resolve(null); // timeout
-                }, 1000);
+                }, 3000);
                 
                 const handler = (event) => {
                     try {
