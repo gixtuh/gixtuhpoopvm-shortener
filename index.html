@@ -82,9 +82,9 @@
     </style>
 </head>
 <body>
-    <h1>gixtuh's poop vm</h1>
+    <h1>gixtuh's great vm</h1>
     <p>a really great vnc with a virtual machine</p> <br />
-    <button onclick="window.location.href = 'https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhpoopvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0'">embed</button>
+    <button onclick="window.location.href = 'https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhgreatvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0'">embed</button>
     <button id="rebootBtn">reboot</button>
     
     <script>
@@ -92,28 +92,28 @@
         document.getElementById('rebootBtn').addEventListener('click', async () => {
             const secretJson = await new Promise(resolve => {
                 ws.send(JSON.stringify({
-                    room: 'gixtuhpoopvm',
+                    room: 'gixtuhgreatvm',
                     message: 'hidden',
                     action: 'reboot'
                 }));
                 const timeout = setTimeout(() => {
                     ws.removeEventListener('message', handler);
                     resolve(null); // timeout
-                }, 3000);
+                }, 1000);
                 
                 const handler = (event) => {
                     try {
                         const data = JSON.parse(event.data);
                         if (
-                        data.room === "gixtuhpoopvm" &&
+                        data.room === "gixtuhgreatvm" &&
                         data.message === "hidden" &&
                         data.action === "code" ||
                         
-                        data.room === "gixtuhpoopvm" &&
+                        data.room === "gixtuhgreatvm" &&
                         data.message === "hidden" &&
                         data.action === "rebootSuccessful" ||
 
-                        data.room === "gixtuhpoopvm" &&
+                        data.room === "gixtuhgreatvm" &&
                         data.message === "hidden" &&
                         data.action === "codeTimeout"
                         ) {
@@ -133,7 +133,7 @@
                     const code = prompt("enter 4 digit code to reboot:");
                     if (code) {
                         ws.send(JSON.stringify({
-                            room: 'gixtuhpoopvm',
+                            room: 'gixtuhgreatvm',
                             message: 'hidden',
                             action: 'reboot',
                             code: code
@@ -143,7 +143,7 @@
                     const code = prompt("reboot option is on cooldown, enter 4 digit code to reboot:");
                     if (code) {
                         ws.send(JSON.stringify({
-                            room: 'gixtuhpoopvm',
+                            room: 'gixtuhgreatvm',
                             message: 'hidden',
                             action: 'reboot',
                             code: code
@@ -157,7 +157,7 @@
         </script>
         
         <hr />
-        <iframe id="iframething" width="700" height="450" src="https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhpoopvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0" allowfullscreen></iframe>
+        <iframe id="iframething" width="700" height="450" src="https://novnc.com/noVNC/vnc.html?autoconnect=1&host=gixtuhgreatvm.serveousercontent.com&port=443&resize=scale&reconnect=1&path=&reconnect_delay=0" allowfullscreen></iframe>
         
         <br />
         
@@ -175,7 +175,7 @@
             
             let user = localStorage.getItem("username") ?? `Guest${Math.round(Math.random() * 89999999 + 10000000)}`
             console.log(user)
-            const ws = new WebSocket('wss://gixtuhpoopvm-chat.serveousercontent.com', user);
+            const ws = new WebSocket('wss://gixtuhgreatvm-chat.serveousercontent.com', user);
             
             function changeuser() {
                 user = prompt("which username")
@@ -192,7 +192,7 @@
             ws.addEventListener('message', (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    if (data.room === 'gixtuhpoopvm') {
+                    if (data.room === 'gixtuhgreatvm') {
                         if (data.message !== "hidden" && data.user !== undefined) {
                             appendMessage(data.user ? `${data.user}: ${data.message}` : data.message);
                             document.getElementById("notif").play()
@@ -218,7 +218,7 @@
             
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && input.value.trim()) {
-                    const msg = { room: 'gixtuhpoopvm', message: input.value.trim(), user: user };
+                    const msg = { room: 'gixtuhgreatvm', message: input.value.trim(), user: user };
                     ws.send(JSON.stringify(msg));
                     input.value = '';
                 }
