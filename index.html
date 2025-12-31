@@ -99,7 +99,7 @@
                 const timeout = setTimeout(() => {
                     ws.removeEventListener('message', handler);
                     resolve(null); // timeout
-                }, 1000);
+                }, 3000);
                 
                 const handler = (event) => {
                     try {
